@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: insurance_accumulator
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./database/sample-data.sql:/docker-entrypoint-initdb.d/02-sample-data.sql:ro
+      - db:/var/lib/postgresql/data
+
+  app:
+    build: . # Build the Spring Boot image from the current directory
+    container_name: accumulator
+    ports:
+      - "8080:8080" # Map host port 8080 to container port 8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/insurance_accumulator
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    depends_on:
+      - db # Ensure the database starts before the application
+
+  frontend:
+    build:
+      context: ./frontend # Path to your Next.js project
+      args:
+        NEXT_PUBLIC_API_BASE: http://localhost:8080
+    container_name: accumulator-frontend
+    ports:
+      - "3002:3000" # Next.js server listens on 3000 inside the container
+    environment:
+      NEXT_PUBLIC_API_BASE: http://localhostgit :8080
+    depends_on:
+      - app
+
+volumes:
+  db:
+    driver: local
