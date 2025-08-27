@@ -15,5 +15,3 @@ Map Benefits and CostShare
 
 Benefit Level CostShare Mapping
 
-1) Read CopCoin table based on benefitId 
-2) Map Benefitlevel Level cost share attributs from above query results 
