@@ -19,21 +19,23 @@ public class WebConfig implements WebMvcConfigurer {
                     "http://localhost:*",
                     "http://127.0.0.1:*",
                     "https://localhost:*",
-                    "https://127.0.0.1:*"
+                    "https://127.0.0.1:*",
+                    "https://insurance-accumulator-latest.onrender.com",
+                    "https://*.onrender.com"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .allowCredentials(false)
+                .allowCredentials(true)
                 .maxAge(3600);
     }
 
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(false);
-        config.addAllowedOriginPattern("http://localhost:*");
-        config.addAllowedOriginPattern("http://127.0.0.1:*");
-        config.addAllowedOriginPattern("https://localhost:*");
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("https://insurance-accumulator-latest.onrender.com");
+        config.addAllowedOriginPattern("https://*.onrender.com");
         config.addAllowedOriginPattern("https://127.0.0.1:*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
