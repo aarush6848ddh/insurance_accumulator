@@ -1,5 +1,6 @@
 package com.insurance.accumulator.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,9 +13,22 @@ import io.swagger.v3.oas.models.servers.Server;
 @Configuration
 public class OpenApiConfig {
 
+    @Value("${server.servlet.context-path:}")
+    private String contextPath;
+
     @Bean
     public OpenAPI customOpenAPI() {
+        String baseUrl = "/";
+        if (contextPath != null && !contextPath.isEmpty()) {
+            baseUrl = contextPath;
+        }
+        
+        Server server = new Server()
+            .url(baseUrl)
+            .description("Current Server");
+            
         return new OpenAPI()
+                .addServersItem(server)
                 .info(new Info()
                         .title("Insurance Accumulator API")
                         .description("API for managing insurance benefit plans, deductibles, and out-of-pocket maximums")
@@ -25,12 +39,6 @@ public class OpenApiConfig {
                                 .url("https://insurance.com"))
                         .license(new License()
                                 .name("MIT License")
-                                .url("https://opensource.org/licenses/MIT")))
-                .addServersItem(new Server()
-                        .url("http://localhost:8080")
-                        .description("Development Server"))
-                .addServersItem(new Server()
-                        .url("https://api.insurance.com")
-                        .description("Production Server"));
+                                .url("https://opensource.org/licenses/MIT")));
     }
 }
