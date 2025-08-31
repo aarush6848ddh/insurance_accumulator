@@ -14,16 +14,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(@NonNull CorsRegistry registry) {
+        // Allow all origins for development - restrict in production
         registry.addMapping("/**")
-                .allowedOriginPatterns(
-                    "http://localhost:*",
-                    "http://127.0.0.1:*",
-                    "https://localhost:*",
-                    "https://127.0.0.1:*",
-                    "https://insurance-accumulator-latest.onrender.com",
-                    "https://*.onrender.com"
-                )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedOriginPatterns("*")
+                .allowedMethods("*")
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
@@ -32,13 +26,14 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
+        // Allow all origins for development - restrict in production
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000");
-        config.addAllowedOrigin("https://insurance-accumulator-latest.onrender.com");
-        config.addAllowedOriginPattern("https://*.onrender.com");
-        config.addAllowedOriginPattern("https://127.0.0.1:*");
+        config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
+        // Add these headers for Swagger UI
+        config.addExposedHeader("Access-Control-Allow-Origin");
+        config.addExposedHeader("Access-Control-Allow-Credentials");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
