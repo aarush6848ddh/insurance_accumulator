@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Main Spring Boot application class for the Insurance Accumulator System.
@@ -21,7 +23,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableJpaAuditing
 public class Accumulator1Application {
 
-    @Bean
+    /*@Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
@@ -38,7 +40,7 @@ public class Accumulator1Application {
         
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
-    }
+    }*/
 
     public static void main(String[] args) {
         SpringApplication.run(Accumulator1Application.class, args);
