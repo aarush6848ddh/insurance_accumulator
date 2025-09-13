@@ -5,15 +5,12 @@
 [build.environment]
   NODE_VERSION = "18"
   NEXT_TELEMETRY_DISABLED = "1"
-  NEXT_PRIVATE_TARGET = "server"
 
 # Handle client-side routing for non-API routes
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  force = false
-  conditions = {Role = ["!API"]}
 
 # Handle API routes - proxy to backend
 [[redirects]]
@@ -21,7 +18,6 @@
   to = "https://insurance-accumulator-latest.onrender.com/api/:splat"
   status = 200
   force = true
-  headers = {X-From-Netlify = "true"}
 
 # Security headers
 [[headers]]
@@ -33,8 +29,6 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# Enable Netlify Next.js plugin with explicit exclusions
+# Enable Netlify Next.js plugin
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  [plugins.inputs]
-    exclude = ["**/api/**/*"]
