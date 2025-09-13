@@ -8,7 +8,7 @@
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
   NEXT_PUBLIC_API_BASE = "https://insurance-accumulator-latest.onrender.com"
 
-# Handle client-side routing for non-API routes
+# SPA fallback for client-side routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
