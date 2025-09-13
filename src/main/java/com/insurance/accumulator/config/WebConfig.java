@@ -17,17 +17,19 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    private static final List<String> ALLOWED_ORIGINS = List.of(
+        "https://insurance-accumulator.netlify.app",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:3002",
+        "http://127.0.0.1:3002"
+    );
+
     @Override
     public void addCorsMappings(@NonNull CorsRegistry registry) {
         // Allow the Netlify site and local dev; credentials disabled
         registry.addMapping("/**")
-                .allowedOriginPatterns(
-                    "https://insurance-accumulator.netlify.app",
-                    "http://localhost:3000",
-                    "http://127.0.0.1:3000",
-                    "http://localhost:3002",
-                    "http://127.0.0.1:3002"
-                )
+                .allowedOrigins(ALLOWED_ORIGINS.toArray(new String[0]))
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(false)
@@ -37,13 +39,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of(
-            "https://insurance-accumulator.netlify.app",
-            "http://localhost:3000",
-            "http://127.0.0.1:3000",
-            "http://localhost:3002",
-            "http://127.0.0.1:3002"
-        ));
+        config.setAllowedOrigins(ALLOWED_ORIGINS);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(false);
@@ -58,13 +54,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of(
-            "https://insurance-accumulator.netlify.app",
-            "http://localhost:3000",
-            "http://127.0.0.1:3000",
-            "http://localhost:3002",
-            "http://127.0.0.1:3002"
-        ));
+        config.setAllowedOrigins(ALLOWED_ORIGINS);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(false);
