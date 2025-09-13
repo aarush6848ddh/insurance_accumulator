@@ -6,9 +6,17 @@ const nextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
-  // Remove exportPathMap as it's not compatible with App Router
-  // Remove rewrites as they don't work with static exports
-  // The API routes will be handled by Netlify redirects
+  // Skip API routes during build
+  experimental: {
+    outputFileTracingExcludes: {
+      '*': [
+        'node_modules/**/*',
+        '**/api/**/*',
+      ],
+    },
+  },
+  // Skip API routes in static generation
+  exclude: ['**/api/**/*'],
 };
 
 module.exports = nextConfig;
