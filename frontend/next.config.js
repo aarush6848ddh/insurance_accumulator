@@ -6,31 +6,9 @@ const nextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
-  // Skip API routes in static generation
-  exportPathMap: async function() {
-    return {
-      '/': { page: '/' },
-      // Add other static pages here
-    };
-  },
-  // Disable static optimization for API routes
-  experimental: {
-    outputFileTracingExcludes: {
-      '*': [
-        'node_modules/**/*',
-        '**/api/**/*',
-      ],
-    },
-  },
-  // Handle API routes
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'https://insurance-accumulator-latest.onrender.com/api/:path*',
-      },
-    ];
-  },
+  // Remove exportPathMap as it's not compatible with App Router
+  // Remove rewrites as they don't work with static exports
+  // The API routes will be handled by Netlify redirects
 };
 
 module.exports = nextConfig;
