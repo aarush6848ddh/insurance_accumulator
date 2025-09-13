@@ -9,31 +9,40 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.List;
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    private static final List<String> ALLOWED_ORIGINS = List.of(
+        "https://insurance-accumulator.netlify.app",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:3002",
+        "http://127.0.0.1:3002"
+    );
+
     @Override
     public void addCorsMappings(@NonNull CorsRegistry registry) {
-        // Allow all origins for development - restrict in production
+        // Restrict to known frontends and do NOT use credentials
         registry.addMapping("/**")
-                .allowedOriginPatterns("*")
-                .allowedMethods("*")
+                .allowedOrigins(ALLOWED_ORIGINS.toArray(new String[0]))
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .allowCredentials(true)
+                .allowCredentials(false)
                 .maxAge(3600);
     }
 
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        // Allow all origins for development - restrict in production
-        config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*");
+        // Mirror the same policy in the filter
+        config.setAllowCredentials(false);
+        config.setAllowedOrigins(ALLOWED_ORIGINS);
         config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        // Add these headers for Swagger UI
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        // Expose common headers if needed
         config.addExposedHeader("Access-Control-Allow-Origin");
-        config.addExposedHeader("Access-Control-Allow-Credentials");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
