@@ -6,19 +6,13 @@
   NODE_VERSION = "18"
   NEXT_TELEMETRY_DISABLED = "1"
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
+  NEXT_PUBLIC_API_BASE = "https://insurance-accumulator-latest.onrender.com"
 
 # Handle client-side routing for non-API routes
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
-# Handle API routes - proxy to backend
-[[redirects]]
-  from = "/api/*"
-  to = "https://insurance-accumulator-latest.onrender.com/api/:splat"
-  status = 200
-  force = true
 
 # Security headers
 [[headers]]
