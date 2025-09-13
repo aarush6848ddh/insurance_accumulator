@@ -6,10 +6,20 @@ const nextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
+  // Skip API routes in static generation
+  exportPathMap: async function() {
+    return {
+      '/': { page: '/' },
+      // Add other static pages here
+    };
+  },
   // Disable static optimization for API routes
   experimental: {
     outputFileTracingExcludes: {
-      '*': ['node_modules/**/*'],
+      '*': [
+        'node_modules/**/*',
+        '**/api/**/*',
+      ],
     },
   },
   // Handle API routes
