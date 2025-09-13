@@ -29,7 +29,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:3002", "http://127.0.0.1:3002"}, allowCredentials = "false")
+@CrossOrigin(
+  origins = {
+    "https://insurance-accumulator.netlify.app",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:3002",
+    "http://127.0.0.1:3002"
+  },
+  allowCredentials = "false"
+)
 @Tag(name = "BenefitPlan Management", description = "APIs for managing insurance benefitPlans")
 public class BenefitPlanController {
   @Autowired
