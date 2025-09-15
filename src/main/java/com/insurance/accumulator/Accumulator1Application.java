@@ -7,6 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.Ordered;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +46,7 @@ public class Accumulator1Application {
         @Override
         public void addCorsMappings(CorsRegistry registry) {
             if (permissive) {
-                System.out.println("[CORS] Permissive mode enabled: allowing all origins, no credentials");
+                System.out.println("[CORS] Permissive mode enabled (WebMvcConfigurer): allowing all origins, no credentials");
                 registry.addMapping("/**")
                         .allowedOriginPatterns("*")
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
@@ -55,7 +61,7 @@ public class Accumulator1Application {
                     .filter(s -> !s.isEmpty())
                     .collect(Collectors.toList());
 
-            System.out.println("[CORS] Restricted mode: allowed origins " + origins + ", credentials=true");
+            System.out.println("[CORS] Restricted mode (WebMvcConfigurer): allowed origins " + origins + ", credentials=true");
 
             registry.addMapping("/**")
                     .allowedOrigins(origins.toArray(new String[0]))
@@ -63,6 +69,38 @@ public class Accumulator1Application {
                     .allowedHeaders("*")
                     .allowCredentials(true)
                     .maxAge(3600);
+        }
+
+        @Bean
+        public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            CorsConfiguration config = new CorsConfiguration();
+
+            if (permissive) {
+                System.out.println("[CORS] Permissive mode enabled (CorsFilter): allowing all origins, no credentials");
+                config.addAllowedOriginPattern("*");
+                config.setAllowCredentials(false);
+            } else {
+                List<String> origins = Arrays.stream(allowedOriginsProp.split(","))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .collect(Collectors.toList());
+                System.out.println("[CORS] Restricted mode (CorsFilter): allowed origins " + origins + ", credentials=true");
+                origins.forEach(config::addAllowedOrigin);
+                config.setAllowCredentials(true);
+            }
+
+            config.addAllowedHeader("*");
+            config.addAllowedMethod("*");
+            // Optional exposed headers if needed by frontend
+            // config.addExposedHeader("Location");
+
+            source.registerCorsConfiguration("/**", config);
+            CorsFilter filter = new CorsFilter(source);
+
+            FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(filter);
+            bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+            return bean;
         }
     }
 }
