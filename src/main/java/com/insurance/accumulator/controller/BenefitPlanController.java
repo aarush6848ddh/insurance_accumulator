@@ -8,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,7 +36,6 @@ public class BenefitPlanController {
   @Autowired
   private MemberRepository memberRepository;
 
-  @CrossOrigin(origins = "https://insurance-accumulator.netlify.app")
   @GetMapping("/benefitPlans")
   @Operation(summary = "Get Plan Benefits for a product", description = "Retrieve plan benefits including coverage details, cost shares, and benefits for a specific product")
   @ApiResponses(value = {

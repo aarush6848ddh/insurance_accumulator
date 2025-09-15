@@ -2,13 +2,15 @@ package com.insurance.accumulator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Main Spring Boot application class for the Insurance Accumulator System.
@@ -23,26 +25,29 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableJpaAuditing
 public class Accumulator1Application {
 
-    /*@Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        
-        // Allow all origins for development (restrict in production)
-        config.addAllowedOriginPattern("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        config.setAllowCredentials(true);
-        
-        // Required for Swagger UI
-        config.addExposedHeader("Access-Control-Allow-Origin");
-        config.addExposedHeader("Access-Control-Allow-Credentials");
-        
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }*/
-
     public static void main(String[] args) {
         SpringApplication.run(Accumulator1Application.class, args);
     }
-} 
+
+    @Configuration
+    static class CorsConfig implements WebMvcConfigurer {
+        @Value("${app.cors.allowed-origins:https://insurance-accumulator.netlify.app,http://localhost:3000}")
+        private String allowedOriginsProp;
+
+        @Override
+        public void addCorsMappings(CorsRegistry registry) {
+            List<String> origins = Arrays.stream(allowedOriginsProp.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .collect(Collectors.toList());
+
+            registry.addMapping("/**")
+                    // Use patterns to support exact origins or wildcard subdomains if provided
+                    .allowedOriginPatterns(origins.toArray(new String[0]))
+                    .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                    .allowedHeaders("*")
+                    .allowCredentials(true)
+                    .maxAge(3600);
+        }
+    }
+}
