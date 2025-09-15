@@ -78,6 +78,15 @@ insurance_accumulator/
 ## How it works (high level)
 The flow to build a response for a member/product is represented in code under `BenefitPlanController` and the service layer it calls:
 
+## Architecture Diagram
+
+```mermaid
+flowchart LR
+    A[User] --> B[Front End<br/>Hosted on Netlify Cloud<br/><br/>/benefits<br/>Next.js React Framework]
+    B --> C[Backend Service<br/>Hosted on Render Cloud<br/><br/>Service Endpoints:<br/>/benefits<br/>/accumulators<br/><br/>Spring Rest & JPA Framework]
+    C --> D[Plan Benefits & Accumulator DB<br/>Hosted on Neon Cloud]
+```
+
 1. Identify product context
    - If `productId` is provided, use it directly.
    - Otherwise, resolve `productId` from `memberId` via `member` table.
