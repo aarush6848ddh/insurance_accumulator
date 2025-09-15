@@ -78,6 +78,8 @@ insurance_accumulator/
 ## How it works (high level)
 The flow to build a response for a member/product is represented in code under `BenefitPlanController` and the service layer it calls:
 
+```
+
 ## Architecture Diagram
 
 ```mermaid
