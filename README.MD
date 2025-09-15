@@ -81,11 +81,22 @@ The flow to build a response for a member/product is represented in code under `
 ## Architecture Diagram
 
 ```mermaid
-flowchart LR
-    A[User] --> B[Front End<br/>Hosted on Netlify Cloud<br/><br/>/benefits<br/>Next.js React Framework]
-    B --> C[Backend Service<br/>Hosted on Render Cloud<br/><br/>Service Endpoints:<br/>/benefits<br/>/accumulators<br/><br/>Spring Rest & JPA Framework]
-    C --> D[Plan Benefits & Accumulator DB<br/>Hosted on Neon Cloud]
+graph LR
+    A[👤 User] --> B["📱 Front End<br/>🟢 Netlify Cloud<br/>Route: /benefits<br/>⚛️ Next.js React"]
+    
+    B --> C["⚙️ Backend Service<br/>☁️ Render Cloud<br/>Endpoints:<br/>/benefits, /accumulators<br/>🌱 Spring Rest + JPA"]
+    
+    C --> D["🗄️ Plan Benefits & Accumulator DB<br/>☁️ Neon Cloud"]
+    D --> C
+    C --> B
+
+    %% Styling
+    style B fill:#E3F2FD,stroke:#1565C0,stroke-width:2px,color:#0D47A1
+    style C fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#1B5E20
+    style D fill:#FFF3E0,stroke:#EF6C00,stroke-width:2px,color:#E65100
+    style A fill:#F3E5F5,stroke:#6A1B9A,stroke-width:2px,color:#4A148C
 ```
+
 
 1. Identify product context
    - If `productId` is provided, use it directly.
