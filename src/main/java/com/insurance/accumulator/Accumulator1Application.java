@@ -34,16 +34,31 @@ public class Accumulator1Application {
         @Value("${app.cors.allowed-origins:https://insurance-accumulator.netlify.app,http://localhost:3000}")
         private String allowedOriginsProp;
 
+        @Value("${app.cors.permissive:false}")
+        private boolean permissive;
+
         @Override
         public void addCorsMappings(CorsRegistry registry) {
+            if (permissive) {
+                System.out.println("[CORS] Permissive mode enabled: allowing all origins, no credentials");
+                registry.addMapping("/**")
+                        .allowedOriginPatterns("*")
+                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(false)
+                        .maxAge(3600);
+                return;
+            }
+
             List<String> origins = Arrays.stream(allowedOriginsProp.split(","))
                     .map(String::trim)
                     .filter(s -> !s.isEmpty())
                     .collect(Collectors.toList());
 
+            System.out.println("[CORS] Restricted mode: allowed origins " + origins + ", credentials=true");
+
             registry.addMapping("/**")
-                    // Use patterns to support exact origins or wildcard subdomains if provided
-                    .allowedOriginPatterns(origins.toArray(new String[0]))
+                    .allowedOrigins(origins.toArray(new String[0]))
                     .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
                     .allowCredentials(true)
