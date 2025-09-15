@@ -81,7 +81,7 @@ The flow to build a response for a member/product is represented in code under `
 ## Architecture Diagram
 
 ```mermaid
-graph LR
+graph LR;
     A[👤 User] --> B["📱 Front End<br/>🟢 Netlify Cloud<br/>Route: /benefits<br/>⚛️ Next.js React"]
     
     B --> C["⚙️ Backend Service<br/>☁️ Render Cloud<br/>Endpoints:<br/>/benefits, /accumulators<br/>🌱 Spring Rest + JPA"]
