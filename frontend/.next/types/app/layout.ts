@@ -1,4 +1,4 @@
-// File: /Users/aarushsingh/springbootprojects/accumalator1/frontend/app/layout.tsx
+// File: /Users/aarushsingh/Fundies2/insurance_accumulator/frontend/app/layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

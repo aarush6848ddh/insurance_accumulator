@@ -296,7 +296,7 @@ export default function Home() {
               </div>
             </motion.div>
 
-          {hasPlans ? (
+            {hasPlans ? (
             <motion.div className="grid grid-cols-1 lg:grid-cols-2 gap-4" variants={resultsItem}>
               {resp!.data!.plans!.map((p, idx) => (
                 <motion.div
@@ -378,9 +378,9 @@ export default function Home() {
                 </motion.div>
               ))}
             </motion.div>
-          ) : (
-            <div className="card p-5 text-white/70">No plans found.</div>
-          )}
+            ) : (
+              <div className="card p-5 text-white/70">No plans found.</div>
+            )}
           </motion.div>
         </motion.section>
       )}
