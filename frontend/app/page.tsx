@@ -434,7 +434,7 @@ export default function Home() {
           transition={{ delay: 1.6, duration: 0.6 }}
         >
           <p className="text-white/60 text-sm">
-            © {new Date().getFullYear()} Insurance Accumulator Demo • Built during Optum Summer Training
+            © {new Date().getFullYear()} Insurance Accumulator Demo • Built by Aarush Singh
           </p>
         </motion.div>
       </motion.footer>
