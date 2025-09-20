@@ -205,3 +205,4 @@ const PlanCard = memo(({ plan, index }: PlanCardProps) => {
 PlanCard.displayName = 'PlanCard';
 
 export default PlanCard;
+

@@ -103,3 +103,4 @@ export function DotsLoader({ className = '' }: { className?: string }) {
     </motion.div>
   );
 }
+
