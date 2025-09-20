@@ -97,14 +97,14 @@ export default function Shell({ children }: { children: React.ReactNode }) {
             </motion.div>
             <motion.nav className="hidden md:flex items-center gap-6">
               <motion.a
-                href="/home"
+                href="/"
                 className="text-white/70 hover:text-white transition-colors"
                 whileHover={{ scale: 1.05 }}
               >
                 Home
               </motion.a>
               <motion.a
-                href="/"
+                href="/demo"
                 className="text-white/70 hover:text-white transition-colors"
                 whileHover={{ scale: 1.05 }}
               >
