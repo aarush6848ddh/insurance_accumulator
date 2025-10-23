@@ -58,7 +58,7 @@ export default function Home() {
             whileHover={{ scale: 1.01 }}
           >
             A comprehensive exploration of healthcare accumulator models developed during my 
-            <span className="gradient-text font-semibold"> summer training at Optum</span>, 
+            <span className="gradient-text font-semibold"> summer training experience</span>, 
             where I delved deep into understanding how insurance companies manage and track 
             member healthcare costs throughout the benefit year.
           </motion.p>
@@ -98,7 +98,7 @@ export default function Home() {
               className="text-3xl md:text-4xl font-bold gradient-text mb-4"
               whileHover={{ scale: 1.05 }}
             >
-              My Optum Summer Training Journey
+              My Summer Training Journey
             </motion.h2>
             <motion.div
               className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto"
@@ -130,7 +130,7 @@ export default function Home() {
                   Deep Dive into Accumulator Models
                 </h3>
                 <p className="text-white/80 leading-relaxed">
-                  During my summer at Optum, I worked extensively with accumulator models that track 
+                  During my summer training, I worked extensively with accumulator models that track 
                   member healthcare spending against their deductibles, copays, and out-of-pocket maximums. 
                   This system ensures accurate cost-sharing calculations throughout the benefit year.
                 </p>
@@ -395,7 +395,7 @@ export default function Home() {
             whileHover={{ scale: 1.01 }}
           >
             This project represents my journey into understanding complex healthcare systems during my 
-            summer training at Optum. It combines real-world industry knowledge with modern web 
+            summer training experience. It combines real-world industry knowledge with modern web 
             technologies to create an educational and interactive experience.
           </motion.p>
           
