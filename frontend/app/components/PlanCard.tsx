@@ -32,172 +32,116 @@ interface PlanCardProps {
   index: number;
 }
 
-const spring = { type: "spring", stiffness: 300, damping: 24 } as const;
-
-const cardHover = {
-  y: -8,
-  scale: 1.02,
-  rotateY: 2,
-  transition: {
-    type: "spring",
-    stiffness: 300,
-    damping: 20
-  }
-};
-
 const PlanCard = memo(({ plan, index }: PlanCardProps) => {
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, y: 30, scale: 0.9, rotateX: -10 }}
-      animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-      transition={{ 
-        delay: index * 0.1,
-        duration: 0.6,
-        type: "spring",
-        stiffness: 200,
-        damping: 20
-      }}
-      whileHover={cardHover}
-      className="card p-6 relative overflow-hidden group"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1, duration: 0.4 }}
+      whileHover={{ y: -4 }}
+      className="card p-6 hover:shadow-lg transition-shadow"
     >
-      {/* Gradient overlay on hover */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        initial={{ opacity: 0 }}
-        whileHover={{ opacity: 1 }}
-      />
-      
-      <div className="relative z-10">
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex-1">
-            <motion.div 
-              className="text-xl font-bold gradient-text mb-2"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 + index * 0.1, duration: 0.6 }}
-            >
-              {plan.planName}
-            </motion.div>
-            {plan.coverage && (
-              <motion.div 
-                className="text-white/70 text-sm flex items-center gap-2"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 + index * 0.1, duration: 0.6 }}
-              >
-                <motion.span 
-                  className="w-2 h-2 rounded-full bg-green-400"
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                Coverage: {plan.coverage.coverageStartDate} → {plan.coverage.coverageEndDate}
-              </motion.div>
-            )}
-          </div>
-          <motion.div 
-            className="text-white/50 text-sm px-3 py-1 rounded-full bg-white/5 border border-white/10"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 + index * 0.1, duration: 0.6 }}
-            whileHover={{ scale: 1.05 }}
-          >
-            Plan ID: {plan.planId}
-          </motion.div>
+      {/* Plan Header */}
+      <div className="flex items-start justify-between mb-6 pb-4 border-b border-gray-200">
+        <div className="flex-1">
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">{plan.planName}</h3>
+          {plan.coverage && (
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <span className="status-dot active"></span>
+              <span>
+                {plan.coverage.coverageStartDate} → {plan.coverage.coverageEndDate}
+              </span>
+            </div>
+          )}
         </div>
-
-        {plan.costshares && plan.costshares.length > 0 && (
-          <motion.div 
-            className="mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 + index * 0.1, duration: 0.6 }}
-          >
-            <motion.div 
-              className="text-white/80 text-sm font-semibold mb-3 flex items-center gap-2"
-              whileHover={{ scale: 1.02 }}
-            >
-              <motion.span 
-                className="w-1 h-4 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"
-                animate={{ scaleY: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-              Plan Cost Shares
-            </motion.div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {plan.costshares.map((cs, i) => (
-                <motion.div
-                  key={i}
-                  className="p-4 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/20 backdrop-blur-sm"
-                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ ...spring, delay: i * 0.1 }}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                >
-                  <div className="font-semibold text-white mb-2">{cs.costShareName}</div>
-                  <div className="space-y-1 text-sm">
-                    <div className="text-white/70">Type: <span className="text-white">{cs.costShareType}</span></div>
-                    <div className="text-white/70">Unit: <span className="text-white">{cs.costShareUnt}</span></div>
-                    <div className="text-white/70">Individual: <span className="text-green-400 font-medium">{cs.indvCostShareValue}</span></div>
-                    <div className="text-white/70">Family: <span className="text-blue-400 font-medium">{cs.familyCostShareValue}</span></div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {plan.benefits && plan.benefits.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 + index * 0.1, duration: 0.6 }}
-          >
-            <motion.div 
-              className="text-white/80 text-sm font-semibold mb-3 flex items-center gap-2"
-              whileHover={{ scale: 1.02 }}
-            >
-              <motion.span 
-                className="w-1 h-4 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"
-                animate={{ scaleY: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-              />
-              Benefits
-            </motion.div>
-            <div className="space-y-3">
-              {plan.benefits.map((b, i) => (
-                <motion.div
-                  key={i}
-                  className="p-4 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/20 backdrop-blur-sm"
-                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ ...spring, delay: i * 0.1 }}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                >
-                  <div className="font-semibold text-white mb-3">{b.benefitName}</div>
-                  {b.costshare && b.costshare.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {b.costshare.map((cs, j) => (
-                        <motion.div 
-                          key={j} 
-                          className="p-3 rounded-lg bg-white/5 border border-white/10 text-sm"
-                          whileHover={{ scale: 1.05 }}
-                        >
-                          <div className="font-medium text-white">{cs.costShareType}</div>
-                          <div className="text-white/70">{cs.costShareName} ({cs.costShareUnt})</div>
-                          <div className="text-white/70">Value: <span className="text-green-400 font-medium">{cs.indvCostShareValue}</span></div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
+        <div className="text-xs text-gray-500 bg-gray-50 px-3 py-1 rounded-md">
+          {plan.planId}
+        </div>
       </div>
+
+      {/* Cost Shares Section */}
+      {plan.costshares && plan.costshares.length > 0 && (
+        <div className="mb-6">
+          <h4 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
+            Plan Cost Shares
+          </h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {plan.costshares.map((cs, i) => (
+              <motion.div
+                key={i}
+                className="info-card"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: (index * 0.1) + (i * 0.05) }}
+              >
+                <div className="info-card-header">
+                  <div className="info-card-title">{cs.costShareName}</div>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Type:</span>
+                    <span className="font-medium text-gray-900">{cs.costShareType}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Unit:</span>
+                    <span className="font-medium text-gray-900">{cs.costShareUnt}</span>
+                  </div>
+                  <div className="pt-2 border-t border-gray-100">
+                    <div className="flex justify-between mb-1">
+                      <span className="text-gray-600">Individual:</span>
+                      <span className="font-semibold text-blue-600">${cs.indvCostShareValue.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Family:</span>
+                      <span className="font-semibold text-blue-600">${cs.familyCostShareValue.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Benefits Section */}
+      {plan.benefits && plan.benefits.length > 0 && (
+        <div>
+          <h4 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
+            Benefits
+          </h4>
+          <div className="space-y-3">
+            {plan.benefits.map((benefit, i) => (
+              <motion.div
+                key={i}
+                className="info-card"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: (index * 0.1) + (i * 0.05) }}
+              >
+                <div className="info-card-title mb-3">{benefit.benefitName}</div>
+                {benefit.costshare && benefit.costshare.length > 0 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {benefit.costshare.map((cs, j) => (
+                      <div
+                        key={j}
+                        className="p-3 rounded-md bg-gray-50 border border-gray-200 text-sm"
+                      >
+                        <div className="font-medium text-gray-900 mb-1">{cs.costShareType}</div>
+                        <div className="text-gray-600 text-xs mb-1">
+                          {cs.costShareName} ({cs.costShareUnt})
+                        </div>
+                        <div className="text-gray-900 font-semibold">
+                          ${cs.indvCostShareValue.toLocaleString()}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 });
@@ -205,4 +149,3 @@ const PlanCard = memo(({ plan, index }: PlanCardProps) => {
 PlanCard.displayName = 'PlanCard';
 
 export default PlanCard;
-
