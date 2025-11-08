@@ -21,6 +21,30 @@ import {
   X,
 } from "lucide-react";
 
+type Plan = {
+  planId: string;
+  planName: string;
+  coverage?: { coverageStartDate: string; coverageEndDate: string };
+  costshares?: Array<{
+    costShareType: string;
+    costShareName: string;
+    costShareUnt: string;
+    indvCostShareValue: number;
+    familyCostShareValue: number;
+  }>;
+  benefits?: Array<{
+    benefitId: string;
+    benefitName: string;
+    costshare?: Array<{
+      costShareType: string;
+      costShareName: string;
+      costShareUnt: string;
+      indvCostShareValue: number;
+      familyCostShareValue: number;
+    }>;
+  }>;
+};
+
 type ResponseWrapper = {
   status: string;
   code: string;
@@ -36,29 +60,7 @@ type ResponseWrapper = {
       memberEffDt?: string;
       memberTermDt?: string;
     };
-    plans?: Array<{
-      planId: string;
-      planName: string;
-      coverage?: { coverageStartDate: string; coverageEndDate: string };
-      costshares?: Array<{
-        costShareType: string;
-        costShareName: string;
-        costShareUnt: string;
-        indvCostShareValue: number;
-        familyCostShareValue: number;
-      }>;
-      benefits?: Array<{
-        benefitId: string;
-        benefitName: string;
-        costshare?: Array<{
-          costShareType: string;
-          costShareName: string;
-          costShareUnt: string;
-          indvCostShareValue: number;
-          familyCostShareValue: number;
-        }>;
-      }>;
-    }>;
+    plans?: Plan[];
   } | null;
 };
 
@@ -127,7 +129,7 @@ const CircleProgress = ({
 };
 
 // Transform backend plan data into accumulator format
-const transformPlanToAccumulator = (plan: NonNullable<ResponseWrapper['data']>['plans'][0], index: number): AccumulatorData => {
+const transformPlanToAccumulator = (plan: Plan, index: number): AccumulatorData => {
   // Extract deductible and OOP from costshares
   const deductible = plan.costshares?.find(cs => 
     cs.costShareType.toLowerCase().includes('deductible') || 
