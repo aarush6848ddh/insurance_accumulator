@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// Use Next.js API route by default to avoid CORS in the browser.
-// Set NEXT_PUBLIC_API_BASE to call backend directly if needed.
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '';
+// Backend API base URL - can be overridden with NEXT_PUBLIC_API_BASE env var
+// Default to the Render backend URL used in production
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://insurance-accumulator-latest.onrender.com';
 
 export type BenefitPlanRequest = {
   memberId?: string;
@@ -26,9 +26,8 @@ export async function fetchBenefitPlans(req: BenefitPlanRequest) {
     req.hipaaCodes.forEach(code => params.append('hipaaCodes', code));
   }
 
-  const url = API_BASE
-    ? `${API_BASE}/benefitPlans?${params.toString()}` // direct to backend
-    : `/api/benefitPlans?${params.toString()}`;       // Next.js proxy
+  // Always use direct backend URL (static export doesn't support API routes)
+  const url = `${API_BASE}/benefitPlans?${params.toString()}`;
     
   const { data } = await axios.get(url);
   return data as any; // backend returns Response wrapper

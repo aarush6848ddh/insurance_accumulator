@@ -37,7 +37,7 @@ public class Accumulator1Application {
 
     @Configuration
     static class CorsConfig implements WebMvcConfigurer {
-        @Value("${app.cors.allowed-origins:https://insurance-accumulator.netlify.app,http://localhost:3000}")
+        @Value("${app.cors.allowed-origins:https://insurance-accumulator.netlify.app,https://insurance-accumulator.vercel.app,https://*.vercel.app,http://localhost:3000}")
         private String allowedOriginsProp;
 
         @Value("${app.cors.permissive:false}")
@@ -61,14 +61,28 @@ public class Accumulator1Application {
                     .filter(s -> !s.isEmpty())
                     .collect(Collectors.toList());
 
-            System.out.println("[CORS] Restricted mode (WebMvcConfigurer): allowed origins " + origins + ", credentials=true");
+            // Separate exact origins from patterns (wildcards)
+            List<String> exactOrigins = origins.stream()
+                    .filter(origin -> !origin.contains("*"))
+                    .collect(Collectors.toList());
+            List<String> originPatterns = origins.stream()
+                    .filter(origin -> origin.contains("*"))
+                    .collect(Collectors.toList());
 
-            registry.addMapping("/**")
-                    .allowedOrigins(origins.toArray(new String[0]))
+            System.out.println("[CORS] Restricted mode (WebMvcConfigurer): allowed origins " + exactOrigins + ", patterns " + originPatterns + ", credentials=true");
+
+            var mapping = registry.addMapping("/**")
                     .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
                     .allowCredentials(true)
                     .maxAge(3600);
+            
+            if (!exactOrigins.isEmpty()) {
+                mapping.allowedOrigins(exactOrigins.toArray(new String[0]));
+            }
+            if (!originPatterns.isEmpty()) {
+                mapping.allowedOriginPatterns(originPatterns.toArray(new String[0]));
+            }
         }
 
         @Bean
@@ -85,8 +99,19 @@ public class Accumulator1Application {
                         .map(String::trim)
                         .filter(s -> !s.isEmpty())
                         .collect(Collectors.toList());
-                System.out.println("[CORS] Restricted mode (CorsFilter): allowed origins " + origins + ", credentials=true");
-                origins.forEach(config::addAllowedOrigin);
+                
+                // Separate exact origins from patterns (wildcards)
+                List<String> exactOrigins = origins.stream()
+                        .filter(origin -> !origin.contains("*"))
+                        .collect(Collectors.toList());
+                List<String> originPatterns = origins.stream()
+                        .filter(origin -> origin.contains("*"))
+                        .collect(Collectors.toList());
+                
+                System.out.println("[CORS] Restricted mode (CorsFilter): allowed origins " + exactOrigins + ", patterns " + originPatterns + ", credentials=true");
+                
+                exactOrigins.forEach(config::addAllowedOrigin);
+                originPatterns.forEach(config::addAllowedOriginPattern);
                 config.setAllowCredentials(true);
             }
 
